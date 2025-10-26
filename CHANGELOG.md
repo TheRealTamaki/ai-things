@@ -454,11 +454,194 @@ src/
 3. View all pinned prompts via "Pinned" tab
 4. Quick access to favorites
 
+### Added - Workflow Builder (2025-10-26)
+
+#### Multi-Step Workflow System
+Complete workflow builder implementation for creating and managing multi-step prompt sequences:
+
+**Workflows List Page** (`src/app/workflows/page.tsx`):
+- Grid layout displaying all workflows as cards
+- Step count badge on each workflow
+- Delete confirmation dialogs
+- Empty states with helpful messaging
+- Loading states during data fetch
+- Create new workflow button
+- Responsive design
+
+**Create Workflow Page** (`src/app/workflows/new/page.tsx`):
+- Simple form for workflow name and description
+- Redirects to detail page after creation for step management
+- Form validation
+- Cancel navigation
+
+**Workflow Detail Page** (`src/app/workflows/[id]/page.tsx`):
+- Full workflow display with metadata
+- Ordered list of all workflow steps
+- Add new steps functionality
+- Edit existing steps
+- Delete steps with confirmation
+- Reorder steps (move up/down)
+- Delete entire workflow
+- Empty state when no steps exist
+- Comprehensive step management
+
+**Edit Workflow Page** (`src/app/workflows/[id]/edit/page.tsx`):
+- Update workflow name and description
+- Pre-populated form with existing data
+- Cancel navigation back to detail view
+
+#### Workflow Components
+
+**WorkflowCard Component** (`src/components/workflows/WorkflowCard.tsx`):
+- Card-based workflow display
+- Name, description preview
+- Step count badge
+- Creation date
+- Quick action buttons (Edit, Delete)
+- Hover effects and transitions
+- Clickable to navigate to detail view
+
+**WorkflowForm Component** (`src/components/workflows/WorkflowForm.tsx`):
+- Reusable form for create/edit operations
+- Name and description fields
+- Form validation (required fields, max lengths)
+- Loading and error states
+- Customizable submit button label
+- Cancel callback support
+
+**StepCard Component** (`src/components/workflows/StepCard.tsx`):
+- Displays individual workflow steps
+- Step number badge
+- Shows saved prompt OR custom prompt
+- Displays prompt content with preview
+- Optional notes section with highlighting
+- Action buttons (Edit, Delete, Move Up/Down)
+- Visual differentiation (saved vs custom)
+- Disabled move buttons at boundaries
+
+**AddStepDialog Component** (`src/components/workflows/AddStepDialog.tsx`):
+- Modal dialog for adding/editing steps
+- Toggle between "Saved Prompt" and "Custom Prompt" modes
+- Dropdown to select from user's saved prompts
+- Textarea for custom prompt input
+- Optional notes field
+- Live validation
+- Loading states
+- Handles both add and edit modes
+
+#### Features Implemented
+
+**Workflow Management**:
+- Create workflows with name and description
+- Edit workflow details
+- Delete workflows (cascades to all steps)
+- View all workflows in grid layout
+- Step count tracking
+
+**Step Management**:
+- Add steps using saved prompts or custom prompts
+- Edit existing steps
+- Delete individual steps
+- Reorder steps with up/down buttons
+- Automatic step numbering
+- Support for step notes/instructions
+
+**Step Types**:
+- **Saved Prompt Steps**: Reference existing prompts from library
+- **Custom Prompt Steps**: Write one-off prompts directly
+- Visual badges to differentiate step types
+- Display full prompt content in each step
+
+**Step Reordering**:
+- Move up/down buttons on each step
+- Disabled at list boundaries
+- Updates step_order in database
+- Maintains sequential order
+- Real-time UI updates
+
+**User Experience**:
+- Empty states for workflows and steps
+- Loading indicators during operations
+- Error messages with context
+- Confirmation dialogs for destructive actions
+- Breadcrumb navigation
+- Cancel buttons throughout
+
+**Navigation Enhancement**:
+- Updated Navbar with navigation links
+- Active link highlighting
+- Links to Dashboard, Prompts, Workflows, Tags
+- Responsive nav (hidden on mobile)
+- Consistent across all pages
+
+#### File Structure
+
+```
+src/
+├── app/
+│   └── workflows/
+│       ├── page.tsx                    # Workflows list
+│       ├── new/page.tsx                # Create workflow
+│       └── [id]/
+│           ├── page.tsx                # Workflow detail with steps
+│           └── edit/page.tsx           # Edit workflow
+├── components/
+│   ├── workflows/
+│   │   ├── WorkflowCard.tsx            # Reusable workflow card
+│   │   ├── WorkflowForm.tsx            # Reusable workflow form
+│   │   ├── StepCard.tsx                # Step display card
+│   │   └── AddStepDialog.tsx           # Add/edit step modal
+│   └── Navbar.tsx                      # Updated with nav links
+└── lib/database/
+    └── workflows.ts                    # All workflow operations used
+```
+
+#### Technical Highlights
+
+- **Type Safety**: Full TypeScript coverage with workflow and step types
+- **Database Operations**: Efficient use of helper functions from workflows.ts
+- **State Management**: React hooks with proper dependency management
+- **Cascading Deletes**: Workflow deletion removes all steps
+- **Order Management**: Step reordering with sequential integrity
+- **Flexible Design**: Support for both saved and custom prompts
+- **Component Reusability**: Shared components reduce duplication
+
+#### User Workflows
+
+**Creating a Workflow**:
+1. Click "New Workflow" from workflows page
+2. Enter workflow name and optional description
+3. Click "Create Workflow"
+4. Redirected to detail page
+5. Add steps using saved prompts or custom text
+6. Reorder steps as needed
+
+**Adding Steps**:
+1. Click "Add Step" button
+2. Choose "Saved Prompt" or "Custom Prompt"
+3. Select prompt or write custom text
+4. Add optional notes
+5. Click "Add Step"
+6. Step appears in sequence
+
+**Managing Steps**:
+1. Edit step content by clicking edit icon
+2. Delete steps with confirmation
+3. Reorder using up/down arrows
+4. View full prompt content in each step
+
+**Executing a Workflow**:
+1. View workflow detail page
+2. See all steps in order
+3. Each step displays its prompt content
+4. Copy prompts as needed for execution
+
 ### Next Steps
 The following features are planned for future releases:
-- Multi-step workflow builder UI
-- Full-text search interface
+- Full-text search interface for prompts and workflows
+- Workflow execution mode with step-by-step navigation
 - RICECO framework prompt generator
 - Claude API integration for prompt testing
-- Export/import functionality
+- Export/import functionality for workflows
 - Prompt versioning system
+- Workflow templates and sharing
