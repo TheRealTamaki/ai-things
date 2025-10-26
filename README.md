@@ -59,6 +59,11 @@ npm install
 1. Create a new project at [supabase.com](https://supabase.com)
 2. Once your project is created, go to **Settings** > **API**
 3. Copy your **Project URL** and **anon/public key**
+4. Apply database migrations:
+   - Go to **SQL Editor** in your Supabase dashboard
+   - Run the SQL scripts from `supabase/migrations/` in order:
+     - First: `20251026000001_initial_schema.sql`
+     - Second: `20251026000002_rls_policies.sql`
 
 ### 4. Configure Environment Variables
 
@@ -101,11 +106,20 @@ ai-things/
 │   │   │   ├── client.ts     # Browser client
 │   │   │   ├── server.ts     # Server-side client
 │   │   │   └── middleware.ts # Auth middleware
+│   │   ├── database/         # Database helper functions
+│   │   │   ├── prompts.ts    # Prompt operations
+│   │   │   ├── tags.ts       # Tag operations
+│   │   │   └── workflows.ts  # Workflow operations
 │   │   └── auth.ts           # Authentication helpers
 │   ├── store/                # State management
 │   │   └── authStore.ts      # Authentication state
 │   └── types/                # TypeScript type definitions
-│       └── auth.ts           # Auth-related types
+│       ├── auth.ts           # Auth-related types
+│       └── database.ts       # Database schema types
+├── supabase/
+│   └── migrations/           # Database migration files
+├── docs/
+│   └── DATABASE_SCHEMA.md    # Database schema documentation
 ├── middleware.ts             # Next.js middleware for route protection
 ├── .env.example              # Environment variables template
 ├── CHANGELOG.md              # Project changelog
@@ -167,24 +181,38 @@ This project uses:
 - ESLint for code quality
 - Prettier-compatible formatting (via Next.js)
 
-## Database Schema (Planned)
+## Database Schema
 
-Future releases will include the following database tables:
+The database schema is now implemented and ready to use. It includes:
 
-- \`users\` - User accounts (managed by Supabase Auth)
-- \`prompts\` - Individual prompts with metadata
-- \`workflows\` - Multi-step workflows
-- \`workflow_steps\` - Individual steps within workflows
-- \`tags\` - Categorization tags
-- \`pinned_prompts\` - User's favorited prompts
+- **prompts** - Individual prompts with metadata (title, description, content)
+- **tags** - Categorization tags with custom colors
+- **prompt_tags** - Many-to-many relationship between prompts and tags
+- **pinned_prompts** - User's favorited prompts for quick access
+- **workflows** - Multi-step workflows
+- **workflow_steps** - Individual steps within workflows
+
+**Key Features:**
+- Full-text search on prompt titles and content
+- Row Level Security (RLS) ensuring users can only access their own data
+- Automatic timestamp management
+- Comprehensive indexes for performance
+- TypeScript types for all database operations
+
+For detailed schema documentation, see [DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md)
 
 ## Roadmap
 
-### Phase 1: Authentication (Completed)
+### Phase 1: Authentication & Database (Completed)
 - ✅ User registration and login
 - ✅ Session management
 - ✅ Protected routes
 - ✅ User dashboard
+- ✅ Database schema design
+- ✅ Migration files
+- ✅ Row Level Security policies
+- ✅ Database helper functions
+- ✅ TypeScript types
 
 ### Phase 2: Prompt Management (Next)
 - [ ] Create, edit, and delete prompts
