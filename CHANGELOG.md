@@ -238,13 +238,227 @@ Created comprehensive helper libraries in `src/lib/database/`:
 - Ordered workflow steps with integer positioning
 - Color-coded tags for visual organization
 
+### Added - Prompt CRUD Operations & Tag Management (2025-10-26)
+
+#### Prompt Management UI
+Complete UI implementation for managing prompts with full CRUD operations:
+
+**Prompts List Page** (`src/app/prompts/page.tsx`):
+- Grid layout displaying all prompts as cards
+- Filter tabs for "All Prompts" and "Pinned" prompts
+- Real-time pin/unpin functionality
+- Delete confirmation dialogs
+- Empty states with helpful messaging
+- Loading states during data fetch
+- Error handling with user-friendly messages
+- Responsive design (mobile, tablet, desktop)
+- Quick action buttons (Edit, Delete) on each card
+
+**Create Prompt Page** (`src/app/prompts/new/page.tsx`):
+- Full-featured form for creating new prompts
+- Title field with 255 character limit
+- Description field (optional)
+- Content textarea with character counter
+- Tag selection with visual toggle buttons
+- Form validation (required fields)
+- Error handling and display
+- Cancel navigation
+
+**Prompt Detail/View Page** (`src/app/prompts/[id]/page.tsx`):
+- Full prompt display with metadata
+- Pin/unpin toggle in header
+- Tag display with custom colors
+- Created/Updated timestamps
+- Copy to clipboard functionality
+- Responsive layout
+- Quick actions (Edit, Delete)
+- Back navigation
+
+**Edit Prompt Page** (`src/app/prompts/[id]/edit/page.tsx`):
+- Pre-populated form with existing data
+- Tag management (add/remove tags)
+- Update prompt details
+- Form validation
+- Cancel navigation back to detail view
+
+#### Reusable Components
+
+**PromptCard Component** (`src/components/prompts/PromptCard.tsx`):
+- Card-based prompt display
+- Title, description, content preview (line-clamped)
+- Tag badges with custom colors
+- Pin indicator (filled/outlined icon)
+- Creation date
+- Quick action buttons
+- Hover effects and transitions
+- Clickable to navigate to detail view
+
+**PromptForm Component** (`src/components/prompts/PromptForm.tsx`):
+- Reusable form for create/edit operations
+- Field validation (required fields, max lengths)
+- Tag multi-select with toggle UI
+- Character counter for content
+- Loading and error states
+- Customizable submit button label
+- Cancel callback support
+
+**DeleteConfirmDialog Component** (`src/components/DeleteConfirmDialog.tsx`):
+- Modal confirmation dialog
+- Warning icon and messaging
+- Confirm/Cancel actions
+- Loading state during deletion
+- Backdrop click to cancel
+- Accessible and responsive
+
+#### Tag Management System
+
+**Tags Page** (`src/app/tags/page.tsx`):
+- Full tag CRUD interface
+- Create new tags with custom names and colors
+- Edit existing tags
+- Delete tags (removes from all prompts)
+- Color picker with preset palette
+- Live preview of tag appearance
+- Delete confirmation dialogs
+- Empty states
+- Loading and error handling
+
+**Tag Features**:
+- 8 preset colors (blue, green, amber, red, purple, pink, teal, orange)
+- Custom color picker for unlimited colors
+- 50 character name limit
+- Unique names per user
+- Visual tag preview before saving
+- Tags displayed with custom background colors
+- Tag assignment in prompt forms
+
+#### Dashboard Enhancements
+
+**Updated Dashboard** (`src/app/dashboard/page.tsx`):
+- Real-time statistics from database:
+  - Total prompts count
+  - Total workflows count
+  - Pinned prompts count
+  - Tags count
+- Clickable stat cards linking to relevant pages
+- Icon-enhanced statistics cards
+- Quick actions section with:
+  - Create new prompt
+  - Manage tags
+  - Browse prompts
+- Improved layout and visual hierarchy
+- Loading states for statistics
+- Coming soon notice for future features
+
+#### Features Implemented
+
+**Pin/Unpin Functionality**:
+- Toggle pin status from list view
+- Toggle pin status from detail view
+- Visual indicators (filled/outlined icons)
+- Dedicated "Pinned" filter tab
+- Real-time updates across all views
+
+**Delete Functionality**:
+- Confirmation dialogs for safety
+- Delete from list view
+- Delete from detail view
+- Cascading deletes (removes tags, pins)
+- Loading states during deletion
+- Success/error handling
+
+**Tag Association**:
+- Multi-tag assignment in create/edit forms
+- Visual tag toggles with color preview
+- Add/remove tags when editing
+- Display tags on prompt cards and detail views
+- Tag deletion removes from all prompts
+
+**Loading & Error States**:
+- Skeleton/spinner loading indicators
+- Empty state messaging
+- Error messages with context
+- Retry mechanisms
+- Graceful degradation
+
+**Navigation & UX**:
+- Breadcrumb navigation
+- Back buttons with proper routing
+- Keyboard accessibility
+- Responsive design for all screen sizes
+- Smooth transitions and hover effects
+- Consistent color scheme (dark mode support)
+
+#### File Structure
+
+```
+src/
+├── app/
+│   ├── prompts/
+│   │   ├── page.tsx                    # Prompts list with filtering
+│   │   ├── new/page.tsx                # Create new prompt
+│   │   └── [id]/
+│   │       ├── page.tsx                # Prompt detail view
+│   │       └── edit/page.tsx           # Edit prompt
+│   ├── tags/page.tsx                   # Tag management
+│   └── dashboard/page.tsx              # Updated with real stats
+├── components/
+│   ├── prompts/
+│   │   ├── PromptCard.tsx              # Reusable prompt card
+│   │   └── PromptForm.tsx              # Reusable prompt form
+│   └── DeleteConfirmDialog.tsx         # Confirmation modal
+└── lib/database/
+    ├── prompts.ts                      # Used for all prompt operations
+    ├── tags.ts                         # Used for tag operations
+    └── workflows.ts                    # Used for workflow counts
+```
+
+#### Technical Highlights
+
+- **Type Safety**: Full TypeScript coverage with database types
+- **Performance**: Optimized queries with proper indexes
+- **Security**: RLS policies ensure user data isolation
+- **UX**: Loading states, error handling, empty states
+- **Accessibility**: Semantic HTML, keyboard navigation
+- **Responsive**: Mobile-first design, works on all devices
+- **State Management**: React hooks with proper dependency management
+- **Code Reusability**: Shared components reduce duplication
+
+#### User Workflows
+
+**Creating a Prompt**:
+1. Click "New Prompt" from dashboard or prompts page
+2. Fill in title (required) and optional description
+3. Enter prompt content (required)
+4. Select tags (optional)
+5. Click "Create Prompt"
+6. Redirected to prompts list
+
+**Editing a Prompt**:
+1. Click "Edit" on prompt card or detail view
+2. Modify any fields
+3. Add/remove tags
+4. Click "Save Changes"
+5. Redirected to detail view
+
+**Managing Tags**:
+1. Navigate to Tags page
+2. Click "New Tag" to create
+3. Choose name and color
+4. Preview before saving
+5. Edit or delete existing tags
+
+**Pin/Unpin Prompts**:
+1. Click pin icon on any prompt card
+2. Or toggle from detail view
+3. View all pinned prompts via "Pinned" tab
+4. Quick access to favorites
+
 ### Next Steps
 The following features are planned for future releases:
-- Prompt management UI (CRUD operations)
-- Tag management interface
 - Multi-step workflow builder UI
-- Search and filtering interface
-- Pin/favorite functionality UI
+- Full-text search interface
 - RICECO framework prompt generator
 - Claude API integration for prompt testing
 - Export/import functionality
+- Prompt versioning system
